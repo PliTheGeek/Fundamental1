@@ -1,42 +1,47 @@
-package com.example.fundamental1.ui.upcoming
+package com.example.fundamental1.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
-import com.example.fundamental1.databinding.FragmentUpcomingBinding
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.fundamental1.R
+import com.example.fundamental1.model.ListEventsItem
+import com.example.fundamental1.viewmodel.EventViewModel
 
 class UpcomingFragment : Fragment() {
 
-    private var _binding: FragmentUpcomingBinding? = null
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var adapter: EventAdapter
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
-    private val binding get() = _binding!!
+    private val viewModel: EventViewModel by viewModels()
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
+        inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
-        val upcomingViewModel =
-            ViewModelProvider(this).get(UpcomingViewModel::class.java)
+    ): View? {
+        val view = inflater.inflate(R.layout.fragment_upcoming, container, false)
+        recyclerView = view.findViewById(R.id.recyclerViewUpcoming)
+        recyclerView.layoutManager = LinearLayoutManager(activity)
 
-        _binding = FragmentUpcomingBinding.inflate(inflater, container, false)
-        val root: View = binding.root
+        viewModel.upcomingEvents.observe(viewLifecycleOwner, Observer { events ->
+            adapter = EventAdapter(events, object : EventAdapter.OnItemClickListener {
+                override fun onItemClick(event: ListEventsItem) {
+                    val fragment = EventDetailFragment.newInstance(event.id!!)
+                    parentFragmentManager.beginTransaction()
+                        .replace(R.id.fragment_container, fragment)
+                        .addToBackStack(null)
+                        .commit()
+                }
+            })
+            recyclerView.adapter = adapter
+        })
 
-        val textView: TextView = binding.textUpcoming
-        upcomingViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
-        }
-        return root
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+        viewModel.fetchUpcomingEvents()
+        return view
     }
 }
