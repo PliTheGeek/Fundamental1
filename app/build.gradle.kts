@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    id ("androidx.navigation.safeargs.kotlin")
 }
 
 android {
@@ -54,6 +55,8 @@ dependencies {
     implementation (libs.retrofit)
     implementation (libs.converter.gson)
     implementation (libs.glide)
+    implementation (libs.androidx.navigation.fragment.ktx.v270) // Update to the latest version
+    implementation (libs.androidx.navigation.ui.ktx.v270) // Update to the latest version
 
 
 

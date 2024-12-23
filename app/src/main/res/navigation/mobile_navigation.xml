@@ -1,9 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home">
+    app:startDestination="@id/navigation_home">
 
     <fragment
         android:id="@+id/navigation_home"
@@ -15,11 +13,30 @@
         android:id="@+id/navigation_upcoming"
         android:name="com.example.fundamental1.ui.upcoming.UpcomingFragment"
         android:label="@string/upcoming"
-        tools:layout="@layout/fragment_upcoming" />
+        tools:layout="@layout/fragment_upcoming">
+        <action
+            android:id="@+id/action_upcoming_to_detail"
+            app:destination="@id/navigation_detail" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_finished"
         android:name="com.example.fundamental1.ui.finished.FinishedFragment"
         android:label="@string/finished"
-        tools:layout="@layout/fragment_finished" />
+        tools:layout="@layout/fragment_finished">
+        <action
+            android:id="@+id/action_finished_to_detail"
+            app:destination="@id/navigation_detail" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_detail"
+        android:name="com.example.fundamental1.ui.detail.DetailFragment"
+        android:label="Detail"
+        tools:layout="@layout/fragment_event_detail">
+        <argument
+            android:name="eventId"
+            app:argType="integer"
+            android:defaultValue="0" />
+    </fragment>
 </navigation>
